@@ -54,58 +54,43 @@ This will create a file named `lithophane.stl` in the current directory.
 
 1. Basic lithophane with custom dimensions:
 ```bash
-python lithophane_generator.py input_image.jpg \
-    --output my_lithophane.stl \
-    --width 150
+python lithophane_generator.py input_image.jpg -output my_lithophane.stl --width 150
 ```
 
 2. High contrast lithophane with thicker walls:
 ```bash
-python lithophane_generator.py input_image.jpg \
-    --max-thickness 4.0 \
-    --min-thickness 0.8 \
-    --width 100 \
-    --no-smoothing
+python lithophane_generator.py input_image.jpg --max-thickness 4.0 --min-thickness 0.8 --width 100 --no-smoothing
 ```
 
 3. Lithophane with decorative border:
 ```bash
-python lithophane_generator.py input_image.jpg \
-    --border \
-    --border-width 8 \
-    --border-height 6
+python lithophane_generator.py input_image.jpg --border --border-width 8 --border-height 6
 ```
 
 4. Inverted lithophane for different lighting setups:
 ```bash
-python lithophane_generator.py input_image.jpg \
-    --invert \
-    --max-thickness 3.5 \
-    --min-thickness 0.5
+python lithophane_generator.py input_image.jpg --invert --max-thickness 3.5 --min-thickness 0.5
 ```
 
 5. Fine-tuned lithophane for detailed images:
 ```bash
-python lithophane_generator.py input_image.jpg \
-    --width 200 \
-    --max-thickness 2.5 \
-    --min-thickness 0.4 \
-    --border \
-    --border-width 5 \
-    --border-height 4
+python lithophane_generator.py input_image.jpg --width 200 --max-thickness 2.5 --min-thickness 0.4 --border --border-width 5 --border-height 4
 ```
+### PNG images support
+The script also supports PNG images. However, due to limitations in the Pillow library, the alpha channel is not supported. This means that the script will ignore the alpha channel in the input image and treat the image as a 3-channel RGB image.
+In other words, the script will replace the transparent pixels with a flat surface.
 
 ### Command Line Arguments
 
 - `image`: Path to the input image file (required)
 - `-o, --output`: Output STL file path (default: lithophane.stl)
-- `--max-thickness`: Maximum thickness in mm for darker areas (default: 3.0)
-- `--min-thickness`: Minimum thickness in mm for lighter areas (default: 0.6)
-- `--width`: Desired width of the lithophane in mm (default: 100)
+- `-mxt, --max-thickness`: Maximum thickness in mm for darker areas (default: 3.0)
+- `-mnt, --min-thickness`: Minimum thickness in mm for lighter areas (default: 0.6)
+- `-w, --width`: Desired width of the lithophane in mm (default: 100)
 - `--no-smoothing`: Disable Gaussian smoothing (smoothing is enabled by default)
 - `--border`: Add decorative border frame around the lithophane
-- `--border-width`: Width of the border in mm (default: 5)
-- `--border-height`: Height of the border in mm (default: 5)
+- `-bw, --border-width`: Width of the border in mm (default: 5)
+- `-bh, --border-height`: Height of the border in mm (default: 5)
 - `--invert`: Invert the thickness mapping for different lighting setups
 
 ## Technical Details
@@ -130,6 +115,7 @@ python lithophane_generator.py input_image.jpg \
    - Generates an STL file compatible with all major 3D printing slicers
    - Uses binary STL format for efficiency
    - Provides progress feedback during generation
+   - creates the specified directory if it doesn't exist
 
 ### Resolution and Scale
 
@@ -154,7 +140,6 @@ For best results when 3D printing:
    - 2-3 perimeter walls
    - Print with the flat side down
    - No support structures needed
-   - Consider using "vase mode" for faster printing of simple designs
 
 3. **Display Setup**:
    - Use LED backlighting (warm or cool white depending on preference)
@@ -180,9 +165,16 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Known Issues
 
 1. Very high-resolution images may require significant processing time
-2. Memory usage scales with image resolution
-3. Extremely low-contrast images may produce subtle lithophanes
-4. Border generation may increase processing time for large models
+2. Low-resolution images may result in less detailed lithophanes
+3. Memory usage scales with image resolution
+4. Extremely low-contrast images may produce subtle lithophanes
+5. Border generation may increase processing time for large models
+
+## Future Improvements
+
+1. Adding more decorative borders
+2. Adding curved stl files option
+3. Adding support for more image formats
 
 ## Troubleshooting
 
