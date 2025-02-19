@@ -56,25 +56,40 @@ This will create a file named `lithophane.stl` in the current directory.
 ```bash
 python lithophane_generator.py input_image.jpg -output my_lithophane.stl --width 150
 ```
+```bash
+python lithophane_generator.py input_image.jpg -o my_lithophane.stl -w 150
+```
 
 2. High contrast lithophane with thicker walls:
 ```bash
 python lithophane_generator.py input_image.jpg --max-thickness 4.0 --min-thickness 0.8 --width 100 --no-smoothing
+```
+```bash
+python lithophane_generator.py input_image.jpg -mxt 4.0 -mnt 0.8 -w 100 --no-smoothing
 ```
 
 3. Lithophane with decorative border:
 ```bash
 python lithophane_generator.py input_image.jpg --border --border-width 8 --border-height 6
 ```
+```bash
+python lithophane_generator.py input_image.jpg --border -bw 8 -bh 6
+```
 
 4. Inverted lithophane for different lighting setups:
 ```bash
 python lithophane_generator.py input_image.jpg --invert --max-thickness 3.5 --min-thickness 0.5
 ```
+```bash
+python lithophane_generator.py input_image.jpg --invert -mxt 3.5 -mnt 0.5
+```
 
 5. Fine-tuned lithophane for detailed images:
 ```bash
 python lithophane_generator.py input_image.jpg --width 200 --max-thickness 2.5 --min-thickness 0.4 --border --border-width 5 --border-height 4
+```
+```bash
+python lithophane_generator.py input_image.jpg -w 200 -mxt 2.5 -mnt 0.4 --border -bw 5 --bh 4
 ```
 ### PNG images support
 The script also supports PNG images. However, due to limitations in the Pillow library, the alpha channel is not supported. This means that the script will ignore the alpha channel in the input image and treat the image as a 3-channel RGB image.
