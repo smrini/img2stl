@@ -34,12 +34,6 @@ pip install numpy Pillow numpy-stl opencv-python
 git clone https://github.com/yourusername/lithophane-generator.git
 cd lithophane-generator
 ```
-
-2. Install the dependencies:
-```bash
-pip install -r requirements.txt
-```
-
 ## Usage
 
 ### Basic Usage
