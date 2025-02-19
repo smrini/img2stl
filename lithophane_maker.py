@@ -276,19 +276,19 @@ def main():
     parser.add_argument('image', help='Path to the input image file')
     parser.add_argument('-o', '--output', help='Output STL file path (default: lithophane.stl)', 
                         default='lithophane.stl')
-    parser.add_argument('--max-thickness', type=float, 
+    parser.add_argument('--max-thickness', '-mxt', type=float, 
                         help='Maximum thickness in mm (default: 3.0)', default=3.0)
-    parser.add_argument('--min-thickness', type=float, 
+    parser.add_argument('--min-thickness', '-mnt', type=float, 
                         help='Minimum thickness in mm (default: 0.6)', default=0.6)
-    parser.add_argument('--width', type=int, 
+    parser.add_argument('--width', '-w', type=int, 
                         help='Width in mm (default: 100)', default=100)
     parser.add_argument('--no-smoothing', action='store_true', 
                         help='Disable smoothing')
     parser.add_argument('--border', action='store_true', 
                         help='Add decorative border')
-    parser.add_argument('--border-width', type=float, 
+    parser.add_argument('--border-width', '-bw', type=float, 
                         help='Border width in mm (default: 5)', default=5)
-    parser.add_argument('--border-height', type=float, 
+    parser.add_argument('--border-height', '-bh', type=float, 
                         help='Border height in mm (default: 5)', default=5)
     parser.add_argument('--invert', action='store_true', 
                         help='Invert thickness mapping')
