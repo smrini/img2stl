@@ -263,7 +263,7 @@ def create_lithophane(image_path, output_path, max_thickness=3.0, min_thickness=
     
     pbar.close()
     
-    print("\nLithophane creation complete!")
+    print(f"Lithophane creation complete!")
     print(f"Output file: {output_path}")
     print(f"Model dimensions: {width}mm x {width/aspect_ratio:.1f}mm")
     print(f"Thickness range: {min_thickness}mm to {max_thickness}mm")
