@@ -13,42 +13,70 @@ A Python script that converts 2D images into 3D printable lithophanes. This tool
 - Optional decorative border frame
 - Configurable resolution and size settings
 - Image inversion option for different lighting setups
-
-## Requirements
-
-```
-numpy
-Pillow
-numpy-stl
-opencv-python
-tqdm
-```
-
-Install the required packages using:
-
-```bash
-pip install numpy Pillow numpy-stl opencv-python tqdm
-```
+- Interactive mode for user-friendly operation
+- Available as both Python script and standalone executable
 
 ## Installation
 
-1. Clone this repository:
+### Executable Version
+
+For the executable version, no additional requirements are needed.
+1. Download the latest release from the releases page
+2. No installation needed - the executable is self-contained
+
+### Python Script Version
+
+1. Make sure first to install python from the Official website [here](https://www.python.org/downloads/)
+
+2. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/lithophane-generator.git
-cd lithophane-generator
+git clone https://github.com/smrini/img2stl.git
+cd img2stl
 ```
 
+3. Also if you are going to use the python script you will need the following packages:
+
+    You can install them using the next command:
+```bash
+pip install numpy Pillow numpy-stl opencv-python tqdm
+```
 ## Usage
 
-### Basic Usage
+### Running the Tool
 
-Convert an image to a lithophane with default settings:
+There are four ways to run the Lithophane Generator:
 
+1. **Python Script with Command Line Arguments**:
 ```bash
-python lithophane_generator.py input_image.jpg
+python lithophane_maker.py cat.jpg -o output.stl
 ```
 
-This will create a file named `lithophane.stl` in the current directory.
+2. **Python Script in Interactive Mode**:
+```bash
+python lithophane_maker.py
+```
+
+3. **Executable with Command Line Arguments**:
+```bash
+lithophane_maker.exe image.jpg -o output.stl
+```
+
+4. **Executable in Interactive Mode**:
+- Double-click the .exe file
+- Or run from terminal: `lithophane_maker.exe`
+
+### Command Line Arguments
+
+- `image`: Path to the input image file (required for non-interactive mode)
+- `-o, --output`: Output STL file path (default: lithophane.stl)
+- `-mxt, --max-thickness`: Maximum thickness in mm for darker areas (default: 3.0)
+- `-mnt, --min-thickness`: Minimum thickness in mm for lighter areas (default: 0.6)
+- `-w, --width`: Desired width of the lithophane in mm (default: 100)
+- `--no-smoothing`: Disable Gaussian smoothing (smoothing is enabled by default)
+- `--border`: Add decorative border frame around the lithophane
+- `-bw, --border-width`: Width of the border in mm (default: 5)
+- `-bh, --border-height`: Height of the border in mm (default: 5)
+- `--invert`: Invert the thickness mapping for different lighting setups
 
 ### Advanced Usage Examples
 
@@ -91,22 +119,26 @@ python lithophane_generator.py input_image.jpg --width 200 --max-thickness 2.5 -
 ```bash
 python lithophane_generator.py input_image.jpg -w 200 -mxt 2.5 -mnt 0.4 --border -bw 5 --bh 4
 ```
-### PNG images support
-The script also supports PNG images. However, due to limitations in the Pillow library, the alpha channel is not supported. This means that the script will ignore the alpha channel in the input image and treat the image as a 3-channel RGB image.
-In other words, the script will replace the transparent pixels with a flat surface.
 
-### Command Line Arguments
+## Creating the Executable
 
-- `image`: Path to the input image file (required)
-- `-o, --output`: Output STL file path (default: lithophane.stl)
-- `-mxt, --max-thickness`: Maximum thickness in mm for darker areas (default: 3.0)
-- `-mnt, --min-thickness`: Minimum thickness in mm for lighter areas (default: 0.6)
-- `-w, --width`: Desired width of the lithophane in mm (default: 100)
-- `--no-smoothing`: Disable Gaussian smoothing (smoothing is enabled by default)
-- `--border`: Add decorative border frame around the lithophane
-- `-bw, --border-width`: Width of the border in mm (default: 5)
-- `-bh, --border-height`: Height of the border in mm (default: 5)
-- `--invert`: Invert the thickness mapping for different lighting setups
+To create your own executable from the Python script:
+
+1. Install PyInstaller:
+```bash
+pip install pyinstaller
+```
+
+2. Create the executable:
+```bash
+pyinstaller --onefile --console lithophane_maker.py
+```
+
+Key PyInstaller flags:
+- `--onefile`: Creates a single executable that includes all dependencies
+- `--console`: Shows console output (recommended for this tool)
+
+The compiled executable will be created in the `dist` folder and can be distributed to any Windows machine without requiring Python installation.
 
 ## Technical Details
 
@@ -130,7 +162,12 @@ In other words, the script will replace the transparent pixels with a flat surfa
    - Generates an STL file compatible with all major 3D printing slicers
    - Uses binary STL format for efficiency
    - Provides progress feedback during generation
-   - creates the specified directory if it doesn't exist
+   - Creates the specified directory if it doesn't exist
+
+### PNG images support
+
+The script also supports PNG images. However, due to limitations in the Pillow library, the alpha channel is not supported. This means that the script will ignore the alpha channel in the input image and treat the image as a 3-channel RGB image.
+In other words, the script will replace the transparent pixels with a flat surface.
 
 ### Resolution and Scale
 
@@ -162,20 +199,14 @@ For best results when 3D printing:
    - Optimal viewing distance varies with size
    - Consider using diffused lighting for more even illumination
 
-## Contributing
+## Troubleshooting
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- OpenCV for image processing capabilities
-- numpy-stl for STL file generation
-- Pillow for image handling
-- tqdm for progress visualization
+1. If the output appears inverted, try using the `--invert` flag
+2. For better detail in dark areas, increase `max-thickness`
+3. For more delicate highlights, decrease `min-thickness`
+4. If the model appears too rough, ensure smoothing is enabled (default)
+5. For faster processing of large images, consider reducing the width parameter
+6. If using the executable and it closes immediately, run it from the command prompt to see any error messages
 
 ## Known Issues
 
@@ -191,12 +222,18 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 2. Adding curved stl files option
 3. Adding support for more image formats
 
-## Troubleshooting
+## Contributing
 
-1. If the output appears inverted, try using the `--invert` flag
-2. For better detail in dark areas, increase `max-thickness`
-3. For more delicate highlights, decrease `min-thickness`
-4. If the model appears too rough, ensure smoothing is enabled (default)
-5. For faster processing of large images, consider reducing the width parameter
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Please report any bugs or feature requests through the issue tracker.
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- OpenCV for image processing capabilities
+- numpy-stl for STL file generation
+- Pillow for image handling
+- tqdm for progress visualization
+- PyInstaller for executable creation

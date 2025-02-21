@@ -6,6 +6,7 @@ import argparse
 from tqdm import tqdm
 import os
 from pathlib import Path
+import sys
 
 def create_side_walls(vertices, faces, rows, cols, row_offset):
     """Add side walls to make the model solid and printable"""
@@ -271,47 +272,92 @@ def create_lithophane(image_path, output_path, max_thickness=3.0, min_thickness=
         print(f"Border added: {border_width}mm wide, {border_height}mm high")
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Convert an image to a lithophane STL file')
-    parser.add_argument('image', help='Path to the input image file')
-    parser.add_argument('-o', '--output', help='Output STL file path (default: lithophane.stl)', 
-                        default='lithophane.stl')
-    parser.add_argument('--max-thickness', '-mxt', type=float, 
-                        help='Maximum thickness in mm (default: 3.0)', default=3.0)
-    parser.add_argument('--min-thickness', '-mnt', type=float, 
-                        help='Minimum thickness in mm (default: 0.6)', default=0.6)
-    parser.add_argument('--width', '-w', type=int, 
-                        help='Width in mm (default: 100)', default=100)
-    parser.add_argument('--no-smoothing', action='store_true', 
-                        help='Disable smoothing')
-    parser.add_argument('--border', action='store_true', 
-                        help='Add decorative border')
-    parser.add_argument('--border-width', '-bw', type=float, 
-                        help='Border width in mm (default: 5)', default=5)
-    parser.add_argument('--border-height', '-bh', type=float, 
-                        help='Border height in mm (default: 5)', default=5)
-    parser.add_argument('--invert', action='store_true', 
-                        help='Invert thickness mapping')
-
-    args = parser.parse_args()
+def get_interactive_input():
+    print("Welcome to Lithophane Maker!")
+    image_path = input("Enter path to image file: ")
+    output_path = input("Enter output STL path (or press Enter for default 'lithophane.stl'): ") or "lithophane.stl"
+    max_thickness = float(input("Enter maximum thickness in mm (or press Enter for default 3.0): ") or "3.0")
+    min_thickness = float(input("Enter minimum thickness in mm (or press Enter for default 0.6): ") or "0.6")
+    width = int(input("Enter width in mm (or press Enter for default 100): ") or "100")
+    smoothing = input("Enable smoothing? (y/n, default: y): ").lower() != 'n'
+    border = input("Add decorative border? (y/n, default: n): ").lower() == 'y'
     
-    try:
-        create_lithophane(
-            image_path=args.image,
-            output_path=args.output,
-            max_thickness=args.max_thickness,
-            min_thickness=args.min_thickness,
-            width=args.width,
-            smoothing=not args.no_smoothing,
-            border=args.border,
-            border_width=args.border_width,
-            border_height=args.border_height,
-            invert=args.invert
-        )
-    except Exception as e:
-        print(f"\nError: {str(e)}")
-        parser.print_help()
-        exit(1)
+    if border:
+        border_width = float(input("Enter border width in mm (or press Enter for default 5): ") or "5")
+        border_height = float(input("Enter border height in mm (or press Enter for default 5): ") or "5")
+    else:
+        border_width = 5
+        border_height = 5
+    
+    invert = input("Invert thickness mapping? (y/n, default: n): ").lower() == 'y'
+    
+    return {
+        'image_path': image_path,
+        'output_path': output_path,
+        'max_thickness': max_thickness,
+        'min_thickness': min_thickness,
+        'width': width,
+        'smoothing': smoothing,
+        'border': border,
+        'border_width': border_width,
+        'border_height': border_height,
+        'invert': invert
+    }
+
+def main():
+    # Check if arguments were provided
+    if len(sys.argv) > 1:
+        # Use existing command line argument handling
+        parser = argparse.ArgumentParser(description='Convert an image to a lithophane STL file')
+        parser.add_argument('image', help='Path to the input image file')
+        parser.add_argument('-o', '--output', help='Output STL file path (default: lithophane.stl)', 
+                          default='lithophane.stl')
+        parser.add_argument('--max-thickness', '-mxt', type=float, 
+                          help='Maximum thickness in mm (default: 3.0)', default=3.0)
+        parser.add_argument('--min-thickness', '-mnt', type=float, 
+                          help='Minimum thickness in mm (default: 0.6)', default=0.6)
+        parser.add_argument('--width', '-w', type=int, 
+                          help='Width in mm (default: 100)', default=100)
+        parser.add_argument('--no-smoothing', action='store_true', 
+                          help='Disable smoothing')
+        parser.add_argument('--border', action='store_true', 
+                          help='Add decorative border')
+        parser.add_argument('--border-width', '-bw', type=float, 
+                          help='Border width in mm (default: 5)', default=5)
+        parser.add_argument('--border-height', '-bh', type=float, 
+                          help='Border height in mm (default: 5)', default=5)
+        parser.add_argument('--invert', action='store_true', 
+                          help='Invert thickness mapping')
+
+        args = parser.parse_args()
+        
+        try:
+            create_lithophane(
+                image_path=args.image,
+                output_path=args.output,
+                max_thickness=args.max_thickness,
+                min_thickness=args.min_thickness,
+                width=args.width,
+                smoothing=not args.no_smoothing,
+                border=args.border,
+                border_width=args.border_width,
+                border_height=args.border_height,
+                invert=args.invert
+            )
+        except Exception as e:
+            print(f"\nError: {str(e)}")
+            parser.print_help()
+            exit(1)
+    else:
+        # Use interactive input mode
+        params = get_interactive_input()
+        try:
+            create_lithophane(**params)
+            input("\nPress Enter to exit...")
+        except Exception as e:
+            print(f"\nError: {str(e)}")
+            input("\nPress Enter to exit...")
+            exit(1)
 
 if __name__ == "__main__":
     main()
