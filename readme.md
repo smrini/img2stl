@@ -237,3 +237,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Pillow for image handling
 - tqdm for progress visualization
 - PyInstaller for executable creation
+
+---
+Please report any bugs or feature requests through the issue tracker.
